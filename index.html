@@ -1,0 +1,154 @@
+<html>
+
+<head>
+    
+    <style>
+        #results{
+            background-image: url(images/img1.jpg);
+            height: 200px;
+            width: 800px;
+            color: white;
+            padding: 20px;
+            border-radius: 25px;
+        }
+        
+        #start_button {
+            text-decoration: none;
+            color: black;
+            
+        }
+        input{
+            padding: 2px;
+            border-radius: 4px;
+        }
+        button{
+            border-radius: 4px;
+            padding: 3px;
+        }
+    
+    </style>
+    </head>
+
+    <body>
+    <center>
+<div>
+    <a href="#" id="start_button" onclick="startDictation(event)"><h2> <i>Start Dictation </i></h2> </a>
+</div>
+
+<div id="results">
+  <span id="final_span" class="final"></span>
+  <span id="interim_span" class="interim"></span>
+        </div>
+        <br>
+        Filename to Save As: 
+        <input id="inputFileNameToSaveAs">  
+        <button onclick="saveTextAsFile()">Save Text to File</button>
+        
+        </center>
+        
+        <?php 
+        $MyText ='';
+        $webService = 'https://resoomer.pro/summarizer/';
+$datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
+$ch = curl_init();
+curl_setopt($ch,CURLOPT_URL, $webService);
+curl_setopt($ch,CURLOPT_POST, 2);
+curl_setopt($ch,CURLOPT_POSTFIELDS, $datasPost);
+$result = curl_exec($ch);
+curl_close($ch);
+echo $result;
+
+    
+?>
+        
+        
+        
+<script type="text/javascript">
+    
+    function saveTextAsFile()
+{
+    var textToSave = document.getElementById("results").value;
+    var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
+    var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+    var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
+ 
+    var downloadLink = document.createElement("a");
+    downloadLink.download = fileNameToSaveAs;
+    downloadLink.innerHTML = "Download File";
+    downloadLink.href = textToSaveAsURL;
+    downloadLink.onclick = destroyClickedElement;
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+ 
+    downloadLink.click();
+}
+    
+function destroyClickedElement(event)
+{
+    document.body.removeChild(event.target);
+}
+    
+    
+var final_transcript = '';
+var recognizing = false;
+
+if ('webkitSpeechRecognition' in window) {
+
+  var recognition = new webkitSpeechRecognition();
+
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onstart = function() {
+    recognizing = true;
+  };
+
+  recognition.onerror = function(event) {
+    console.log(event.error);
+  };
+
+  recognition.onend = function() {
+    recognizing = false;
+  };
+
+  recognition.onresult = function(event) {
+    var interim_transcript = '';
+    for (var i = event.resultIndex; i < event.results.length; ++i) {
+      if (event.results[i].isFinal) {
+        final_transcript += event.results[i][0].transcript;
+      } else {
+        interim_transcript += event.results[i][0].transcript;
+      }
+    }
+    final_transcript = capitalize(final_transcript);
+    final_span.innerHTML = linebreak(final_transcript);
+    interim_span.innerHTML = linebreak(interim_transcript);
+    
+  };
+}
+
+var two_line = /\n\n/g;
+var one_line = /\n/g;
+function linebreak(s) {
+  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+}
+
+function capitalize(s) {
+  return s.replace(s.substr(0,1), function(m) { return m.toUpperCase(); });
+}
+
+function startDictation(event) {
+  if (recognizing) {
+    recognition.stop();
+    return;
+  }
+  final_transcript = '';
+  recognition.lang = 'hi-IN';
+  recognition.start();
+  final_span.innerHTML = '';
+  interim_span.innerHTML = '';
+}
+</script>
+    
+    </body>
+</html>
