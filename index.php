@@ -4,26 +4,30 @@
     
     <style>
         .area{
-           background-image: url(images/old3.jpg);
+background: rgb(100,100,140);
             height: 500px;
-            width: 390px;
+            width: 600px;
+            border-radius:0px 100px 0px 100px ;
         }
         #final_span{
             padding: 50px 20px;
-            height: 500px;
-            width: 390px;
+            height: 460px;
+            width: 560px;
             background: transparent;
             padding: 10px;
             outline: none;
+            color: white;
+            padding: 20px;
         }
         
         #start_button {
             text-decoration: none;
-            color: black;
+            color: rgb(100,100,200);
             
         }
         textarea{
             resize: none;
+            border-radius: 0px 100px;
         }
         
         input{
@@ -44,39 +48,18 @@
 <div>
     <a href="#" id="start_button" onclick="startDictation(event)"><h2> <i>Start Dictation </i></h2> </a>
 </div>
-        
-        
-        
-       <!--  <table> 
-           
-          <tr>
-        <td colspan="3">
-            <textarea id="final_span" cols="80" rows="25">
-           
-            </textarea>
-        </td>
-    </tr>
-        <tr>
-        <td>Filename to Save As:</td>
-        <td><input id="inputFileNameToSaveAs"></td>
-        <td><button onclick="saveTextAsFile()">Save Text to File</button></td>
-    </tr>
-    <tr>
-        <td>Select a File to Load:</td>
-        <td><input type="file" id="fileToLoad"></td>
-        <td><button onclick="loadFileAsText()">Load Selected File</button><td>
-    </tr>
-</table>
-      -->
-        
+    
+               <form method="post">
 
-       
-        <div class="area">
+    <div class="area">
  '<div id="results" >
-            <span id="interim_span" class="interim"> </span>
-  <textarea id="final_span" class="final"></textarea>
+           <!--  <span id="interim_span" class="interim"> </span> -->
+            <textarea id="final_span" class="final" name="final_text"></textarea> 
+         
         </div>
         </div>
+                    <button name="subb">submitt</button>
+        </form>
         
         
         <br>
@@ -88,11 +71,34 @@
           <input type="file" id="fileToLoad">
           <button onclick="loadFileAsText()">Load Selected File</button>
         <br>
-    
+                   
+       
+<?php 
+               {     $MyText ='';   
 
-  <!--       
+       if(isset($_POST['subb']))
+           $MyText= $_POST['final_text'];
+            $webService = 'https://resoomer.pro/summarizer/';
+$datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
+$ch = curl_init();
+curl_setopt($ch,CURLOPT_URL, $webService);
+curl_setopt($ch,CURLOPT_POST, 2);
+curl_setopt($ch,CURLOPT_POSTFIELDS, $datasPost);
+$result = curl_exec($ch);
+curl_close($ch);
+echo $result;
+       }
+        ?> 
+  <!--   
  < ?php
-$MyText =;
+       
+       if(isset($_POST['submit'])){
+           echo "hellllllllllllllllllllllloooooooooooooo";
+$MyText = 'Automatic summarization is the process of shortening a text document with software, in order to create a summary with the major points of the original document. Technologies that can make a coherent summary take into account variables such as length, writing style and syntax.
+
+Automatic data summarization is part of machine learning and data mining. The main idea of summarization is to find a subset of data which contains the "information" of the entire set. Such techniques are widely used in industry today. Search engines are an example; others include summarization of documents, image collections and videos. Document summarization tries to create a representative summary or abstract of the entire document, by finding the most informative sentences, while in image summarization the system finds the most representative and important (i.e. salient) images. For surveillance videos, one might want to extract the important events from the uneventful context.
+
+There are two general approaches to automatic summarization: extraction and abstraction. Extractive methods work by selecting a subset of existing words, phrases, or sentences in the original text to form the summary. In contrast, abstractive methods build an internal semantic representation and then use natural language generation techniques to create a summary that is closer to what a human might express. Such a summary might include verbal innovations. Research to date';
         
         $webService = 'https://resoomer.pro/summarizer/';
 $datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
@@ -104,7 +110,7 @@ $result = curl_exec($ch);
 curl_close($ch);
 echo $result;
 
-    
+    }
 ?>
 -->
         </center>
