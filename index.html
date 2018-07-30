@@ -2,14 +2,26 @@
 
 <head>
     
+    
     <style>
-        #results{
-            background-image: url(images/img1.jpg);
-            height: 200px;
-            width: 800px;
+        body{
+            margin: 0px;
+        }
+        .area{
+background: rgb(100,100,140);
+            height: 500px;
+            width: 600px;
+            border-radius:0px 100px 0px 100px ;
+        }
+        #final_span{
+            padding: 50px 20px;
+            height: 460px;
+            width: 560px;
+            background: transparent;
+            padding: 10px;
+            outline: none;
             color: white;
             padding: 20px;
-            border-radius: 25px;
         }
         
         #start_button {
@@ -17,6 +29,11 @@
             color: black;
             
         }
+        textarea{
+            resize: none;
+            border-radius: 0px 100px;
+        }
+        
         input{
             padding: 2px;
             border-radius: 4px;
@@ -25,8 +42,14 @@
             border-radius: 4px;
             padding: 3px;
         }
+        .bottom{
+            background: rgb(100,100,160);
+            height: 160px;
+            margin:20px 0px 0px 0px;
+        }
     
     </style>
+    
     </head>
 
     <body>
@@ -34,40 +57,42 @@
 <div>
     <a href="#" id="start_button" onclick="startDictation(event)"><h2> <i>Start Dictation </i></h2> </a>
 </div>
+    
+               <form method="post" action="formm.php">
 
-<div id="results">
-  <span id="final_span" class="final"></span>
-  <span id="interim_span" class="interim"></span>
+    <div class="area">
+ '<div id="results" >
+           <!--  <span id="interim_span" class="interim"> </span> -->
+            <textarea id="final_span" class="final" name="final_text"></textarea> 
+         
         </div>
+        </div>
+                    <button name="subb">submitt</button>
+                   
+        </form>
+        
+        
         <br>
         Filename to Save As: 
         <input id="inputFileNameToSaveAs">  
-        <button onclick="saveTextAsFile()">Save Text to File</button>
-        
-        </center>
-        
-        <?php 
-        $MyText ='';
-        $webService = 'https://resoomer.pro/summarizer/';
-$datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
-$ch = curl_init();
-curl_setopt($ch,CURLOPT_URL, $webService);
-curl_setopt($ch,CURLOPT_POST, 2);
-curl_setopt($ch,CURLOPT_POSTFIELDS, $datasPost);
-$result = curl_exec($ch);
-curl_close($ch);
-echo $result;
-
+        <button onclick="saveTextAsFile()">Save Text to File</button> <br>
+        <br>
+        Select a File to Load:
+          <input type="file" id="fileToLoad">
+          <button onclick="loadFileAsText()">Load Selected File</button>
+        <br>
     
-?>
         
+ 
+        </center>
         
         
 <script type="text/javascript">
     
     function saveTextAsFile()
 {
-    var textToSave = document.getElementById("results").value;
+    var textToSave = document.getElementById("final_span").innerHTML;
+    // textToSave= textToSave.replace(/\n/g, "\r\n");    
     var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
     var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
     var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
@@ -87,8 +112,20 @@ function destroyClickedElement(event)
 {
     document.body.removeChild(event.target);
 }
-    
-    
+ 
+function loadFileAsText()
+{
+    var fileToLoad = document.getElementById("fileToLoad").files[0];
+ 
+    var fileReader = new FileReader();
+    fileReader.onload = function(fileLoadedEvent) 
+    {
+        var textFromFileLoaded = fileLoadedEvent.target.result;
+        document.getElementById("final_span").innerHTML = textFromFileLoaded;
+    };
+    fileReader.readAsText(fileToLoad, "UTF-8");
+}    
+        
 var final_transcript = '';
 var recognizing = false;
 
@@ -143,12 +180,18 @@ function startDictation(event) {
     return;
   }
   final_transcript = '';
-  recognition.lang = 'hi-IN';
+  recognition.lang = 'en-IN';
   recognition.start();
   final_span.innerHTML = '';
   interim_span.innerHTML = '';
 }
 </script>
+        
+        <div class="bottom">
+        
+        developer Srishti Yadav.
+        
+        </div>
     
     </body>
 </html>
