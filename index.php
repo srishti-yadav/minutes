@@ -1,118 +1,79 @@
 <html>
 
 <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
     
-    <style>
-        .area{
-background: rgb(100,100,140);
-            height: 500px;
-            width: 600px;
-            border-radius:0px 100px 0px 100px ;
-        }
-        #final_span{
-            padding: 50px 20px;
-            height: 460px;
-            width: 560px;
-            background: transparent;
-            padding: 10px;
-            outline: none;
-            color: white;
-            padding: 20px;
-        }
-        
-        #start_button {
-            text-decoration: none;
-            color: rgb(100,100,200);
-            
-        }
-        textarea{
-            resize: none;
-            border-radius: 0px 100px;
-        }
-        
-        input{
-            padding: 2px;
-            border-radius: 4px;
-        }
-        button{
-            border-radius: 4px;
-            padding: 3px;
-        }
+<style>
+   
+    .results{
+        color: white;
+        font-size: 15px;
+        text-align: left;
     
+    }
+    .box1{
+        float: right;
+        height: 200px;
+        padding: 70px 150px 70px 10px;
+    }
     </style>
+    
     
     </head>
 
     <body>
     <center>
 <div>
-    <a href="#" id="start_button" onclick="startDictation(event)"><h2> <i>Start Dictation </i></h2> </a>
-</div>
+    <a href="#" id="start_button" onclick="startDictation(event)"><button style="margin-bottom:10px;padding:5px;background:white"><i> <h2 style="margin:0px;padding:0px;color:rgb(100,100,120);">Start Dictation</h2></i></button> </a>  &nbsp;&nbsp;
     
-               <form method="post">
+                   
+</div>
+                        <div class="box1"> 
+                               <button style="margin-top:7px;width:70px" onclick="pause(event)" class="btn"><b><i>Pause</i></b></button> <br> <br>
+                   <button style="margin-top:7px;width:70px" onclick="reset(event)" class="btn"><b><i>Reset</i></b></button>
 
-    <div class="area">
- '<div id="results" >
-           <!--  <span id="interim_span" class="interim"> </span> -->
-            <textarea id="final_span" class="final" name="final_text"></textarea> 
-         
+                        
+            </div>
+
+               <form method="post" action="minutes.php" onsubmit="javascript: return process();"> 
+    <div class="area area2">
+ <div class="results" contenteditable="true" >
+
+            <span id="final_span"  class="final" name="final_text">
+    
+        </span> 
+                      <span id="interim_span" class="interim"> </span> 
+
         </div>
+               
+        
         </div>
-                    <button name="subb">submitt</button>
+                   
+                      <input type="hidden" id ="hidden" name="hidden">
+                    <script type="text/javascript">
+function process() {
+  document.getElementById("hidden").value = document.getElementById("final_span").innerHTML;
+  return true;
+}
+</script>
+        
+                 
+
+                   <button style="margin-top:7px;" class="btn" name="subb"><b><i>Summarize</i></b></button>
         </form>
+
         
-        
-        <br>
+        <div class="aft">
         Filename to Save As: 
         <input id="inputFileNameToSaveAs">  
-        <button onclick="saveTextAsFile()">Save Text to File</button> <br>
-        <br>
+        <button class="btn"  onclick="saveTextAsFile()"><b><i>Save Text to File</i></b></button> <br>
+    <br>
         Select a File to Load:
           <input type="file" id="fileToLoad">
-          <button onclick="loadFileAsText()">Load Selected File</button>
-        <br>
-                   
-       
-<?php 
-               {     $MyText ='';   
-
-       if(isset($_POST['subb']))
-           $MyText= $_POST['final_text'];
-            $webService = 'https://resoomer.pro/summarizer/';
-$datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
-$ch = curl_init();
-curl_setopt($ch,CURLOPT_URL, $webService);
-curl_setopt($ch,CURLOPT_POST, 2);
-curl_setopt($ch,CURLOPT_POSTFIELDS, $datasPost);
-$result = curl_exec($ch);
-curl_close($ch);
-echo $result;
-       }
-        ?> 
-  <!--   
- < ?php
-       
-       if(isset($_POST['submit'])){
-           echo "hellllllllllllllllllllllloooooooooooooo";
-$MyText = 'Automatic summarization is the process of shortening a text document with software, in order to create a summary with the major points of the original document. Technologies that can make a coherent summary take into account variables such as length, writing style and syntax.
-
-Automatic data summarization is part of machine learning and data mining. The main idea of summarization is to find a subset of data which contains the "information" of the entire set. Such techniques are widely used in industry today. Search engines are an example; others include summarization of documents, image collections and videos. Document summarization tries to create a representative summary or abstract of the entire document, by finding the most informative sentences, while in image summarization the system finds the most representative and important (i.e. salient) images. For surveillance videos, one might want to extract the important events from the uneventful context.
-
-There are two general approaches to automatic summarization: extraction and abstraction. Extractive methods work by selecting a subset of existing words, phrases, or sentences in the original text to form the summary. In contrast, abstractive methods build an internal semantic representation and then use natural language generation techniques to create a summary that is closer to what a human might express. Such a summary might include verbal innovations. Research to date';
+        <button class="btn" onclick="loadFileAsText()"><b><i>Load Selected File</i></b></button>
         
-        $webService = 'https://resoomer.pro/summarizer/';
-$datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
-$ch = curl_init();
-curl_setopt($ch,CURLOPT_URL, $webService);
-curl_setopt($ch,CURLOPT_POST, 2);
-curl_setopt($ch,CURLOPT_POSTFIELDS, $datasPost);
-$result = curl_exec($ch);
-curl_close($ch);
-echo $result;
-
-    }
-?>
--->
+        </div>
+  
         </center>
         
         
@@ -120,7 +81,8 @@ echo $result;
     
     function saveTextAsFile()
 {
-    var textToSave = document.getElementById("final_span").value;
+    var textToSave = document.getElementById("final_span").innerHTML;
+     textToSave= textToSave.replace("<br>", "\r\n").replace("<p></p>","\r\n\n");    
     var textToSaveAsBlob = new Blob([textToSave], {type:"text/plain"});
     var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
     var fileNameToSaveAs = document.getElementById("inputFileNameToSaveAs").value;
@@ -149,15 +111,17 @@ function loadFileAsText()
     fileReader.onload = function(fileLoadedEvent) 
     {
         var textFromFileLoaded = fileLoadedEvent.target.result;
-        document.getElementById("final_span").value = textFromFileLoaded;
+        document.getElementById("final_span").innerHTML= textFromFileLoaded;
     };
     fileReader.readAsText(fileToLoad, "UTF-8");
 }    
         
-var final_transcript = '';
 var recognizing = false;
 
 if ('webkitSpeechRecognition' in window) {
+var final_transcript = '';
+
+    var interim_transcript = '';
 
   var recognition = new webkitSpeechRecognition();
 
@@ -165,7 +129,8 @@ if ('webkitSpeechRecognition' in window) {
   recognition.interimResults = true;
 
   recognition.onstart = function() {
-    recognizing = true;
+     recognizing = true;
+
   };
 
   recognition.onerror = function(event) {
@@ -177,29 +142,45 @@ if ('webkitSpeechRecognition' in window) {
   };
 
   recognition.onresult = function(event) {
-    var interim_transcript = '';
+      interim_transcript='';
     for (var i = event.resultIndex; i < event.results.length; ++i) {
       if (event.results[i].isFinal) {
-        final_transcript += event.results[i][0].transcript;
+              final_transcript += event.results[i][0].transcript;
       } else {
         interim_transcript += event.results[i][0].transcript;
       }
-    }
+         
+    } 
+      
+  final_transcript = lineb(final_transcript);
+    interim_transcript= lineb(interim_transcript);
+      
+    
+    interim_transcript = capitalize(interim_transcript);
     final_transcript = capitalize(final_transcript);
+      
     final_span.innerHTML = linebreak(final_transcript);
     interim_span.innerHTML = linebreak(interim_transcript);
+         
+      
+
     
   };
-}
-
+    
+}  
 var two_line = /\n\n/g;
 var one_line = /\n/g;
 function linebreak(s) {
-  return s.replace(two_line, '<p></p>').replace(one_line, '<br>');
+  return s.replace(two_line, '.<p></p>').replace(one_line, '.<br>');
+}
+    
+function lineb(s) {
+  return s.replace('period','.').replace('comma',',');
 }
 
+
 function capitalize(s) {
-  return s.replace(s.substr(0,1), function(m) { return m.toUpperCase(); });
+  return s.replace(s.substr(0,2), function(m) { return m.toUpperCase(); });
 }
 
 function startDictation(event) {
@@ -207,13 +188,30 @@ function startDictation(event) {
     recognition.stop();
     return;
   }
-  final_transcript = '';
+  final_transcript =final_transcript + ' ';
   recognition.lang = 'en-IN';
   recognition.start();
-  final_span.innerHTML = '';
+  //final_span.innerHTML = '';
   interim_span.innerHTML = '';
 }
+    
+function reset(event) {
+    document.getElementById("final_span").innerHTML ="";
+    final_transcript='';
+
+    
+}
+    function pause(event){
+        recognition.stop();
+    }
+    
 </script>
+        
+        <div class="bottom">
+        
+        developer  &copy; Srishti Yadav.
+        
+        </div>
     
     </body>
 </html>
