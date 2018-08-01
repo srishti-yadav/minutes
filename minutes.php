@@ -106,7 +106,7 @@ background: rgb(100,100,120);
            //  echo $MyText;
             $webService = 'https://resoomer.pro/analyzer/';
 
-$datasPost = 'API_KEY=CF2B178A234D828A59BEA309F68BDF7C&text='.$MyText;
+$datasPost = 'API_KEY=MY_API_KEY&text='.$MyText;
 
 $ch = curl_init();
 
